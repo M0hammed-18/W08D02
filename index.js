@@ -9,6 +9,8 @@ app.use(express.json())
 
 const roleRouter=require("./routers/routes/role")
 app.use(roleRouter)
+
+
 const PORT=process.env.PORT;
 app.listen(PORT,()=>{
     console.log(`SERVER RUN ON ${PORT}`);
