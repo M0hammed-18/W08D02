@@ -12,7 +12,7 @@ const regester= async (req,res)=>{
     const newUser=new userModel({
         email:saveEmail,
         password:savePassword,
-        role
+        role,
     })
     newUser.save().then((result)=>{
         res.json(result);
@@ -21,5 +21,35 @@ const regester= async (req,res)=>{
     })
 }
 
-module.exports={regester}
+const login=(req,res)=>{
+    const{email,password}=req.body
+    const SECRT_KEY=process.env.SECRT_KEY
+
+    userModel.findOne({email}).then(async(result)=>{
+        if(result){
+            if(result.email==email){
+                const savePassword= await bcrypt.compare(password,result.password)
+                    const payload={
+                        email
+                    }
+                    if(savePassword){
+                        const token =jwt.sign(payload,SECRT_KEY)
+                        res.status(200).json({result,token})
+                    }else{
+                        res.status(400).json("Wrong email or password");
+                    }
+                  } else {
+                    res.status(400).json("Wrong email or password");
+                  }
+                } else {
+                  res.status(404).json("Email not exist");
+                } 
+                    
+    }).catch((err)=>{
+        res.json(err)
+    })
+
+}
+
+module.exports={regester,login}
 
